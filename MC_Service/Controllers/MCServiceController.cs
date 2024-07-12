@@ -2,6 +2,7 @@
 using MC_Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using System.Text.Json;
 
 
 namespace MC_Service.Controllers
@@ -21,9 +22,9 @@ namespace MC_Service.Controllers
         [HttpPost("/addMotorcycle")]
         public async Task<IActionResult> addMotorcycleToDatabase([FromBody] Motorcycle data)
         {
-            ObjectId mcId = await mDB.addMotorcycleToDatabase(data);
-            string mcIdStr = mcId.ToString();
-            return Ok(mcIdStr);
+            Motorcycle mc = await mDB.addMotorcycleToDatabase(data);
+            Console.WriteLine(mc);
+            return Ok(mc);
         }
 
         [HttpGet("/getAllMotorcycles")]
@@ -33,13 +34,14 @@ namespace MC_Service.Controllers
             return Ok(motorcyclesList);
         }
 
+        /*
         [HttpPost("/updateMotorcycle/{id}/{propertyName}/{newvalue}")]
         public async Task<IActionResult> updateMotorcycle(string id, string propertyName, string newvalue) 
         {
            await mDB.updateMotorcycle(id, propertyName, newvalue));
             return Ok();
         }
-
+        */
         
     }
 }

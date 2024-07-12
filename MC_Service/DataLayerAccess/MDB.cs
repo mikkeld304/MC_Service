@@ -26,6 +26,7 @@ namespace MC_Service.DataLayerAccess
                 try
                 {
                     allMotorcycles = await queryableMotorcycles.ToListAsync();
+                    Console.WriteLine(allMotorcycles);
                 }
                 catch (Exception ex) { 
                     Console.WriteLine(ex.Message);
@@ -34,17 +35,18 @@ namespace MC_Service.DataLayerAccess
                 return allMotorcycles;
             }
 
-        public async Task<ObjectId> addMotorcycleToDatabase(Motorcycle motorcycle)
+        public async Task<Motorcycle> addMotorcycleToDatabase(Motorcycle motorcycle)
         {
             try
             {
                 await motorcycles.InsertOneAsync(motorcycle);
+                Console.WriteLine(motorcycle);
             }
             catch (Exception ex) {
                Console.WriteLine(ex);
                 throw;
             }
-            return motorcycle._id;
+            return motorcycle;
         }
 
 
