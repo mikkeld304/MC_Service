@@ -2,6 +2,8 @@
 using MC_Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver.Core.Configuration;
+using System.Collections;
 using System.Text.Json;
 
 
@@ -11,10 +13,16 @@ namespace MC_Service.Controllers
     [ApiController]
     public class MCServiceController : ControllerBase
     {
+        private string connection_string { get; set; }
+        private string databaseName { get; set; }
+        private string collectionName { get; set; }
         private readonly MDB mDB;
-        public MCServiceController() {
 
-            mDB = new MDB("mongodb+srv://mikkelpid:Sfqa0ulocJnPseRf@mcdb.ijorohu.mongodb.net/?retryWrites=true&w=majority&appName=MCDB", "MCDB", "Motorcycles");
+        public MCServiceController() {
+            connection_string = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
+            collectionName = Environment.GetEnvironmentVariable("COLLECTION_NAME");
+            mDB = new MDB(connection_string, databaseName, collectionName);
 
         }
 
@@ -34,14 +42,14 @@ namespace MC_Service.Controllers
             return Ok(motorcyclesList);
         }
 
-        /*
+        
         [HttpPost("/updateMotorcycle/{id}/{propertyName}/{newvalue}")]
         public async Task<IActionResult> updateMotorcycle(string id, string propertyName, string newvalue) 
         {
-           await mDB.updateMotorcycle(id, propertyName, newvalue));
+            await mDB.updateMotorcycle(id, propertyName, newvalue);
             return Ok();
         }
-        */
+        
         
     }
 }

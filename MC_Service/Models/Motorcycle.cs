@@ -23,13 +23,14 @@ public class Motorcycle
     [JsonPropertyName("year")]
     public string Year { get; set; }
 
-    public Motorcycle(string make, string model, string type, string ccm, string color)
+    public Motorcycle(string make, string model, string type, string ccm, string color, string year)
     {
         Make = make;
         Model = model;
         Type = type;
         Ccm = ccm;
         Color = color;
+        Year = year;
     }
 
 

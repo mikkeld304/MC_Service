@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MC_Service.Models;
 using MongoDB.Driver.Linq;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MC_Service.DataLayerAccess
 {
@@ -20,7 +21,7 @@ namespace MC_Service.DataLayerAccess
             queryableMotorcycles = motorcycles.AsQueryable();
         }
 
-            public async Task<List<Motorcycle>> getAllMotorcyclesFromDatabase()
+           public async Task<List<Motorcycle>> getAllMotorcyclesFromDatabase()
             {
                 List<Motorcycle> allMotorcycles = new List<Motorcycle>();
                 try
@@ -35,28 +36,37 @@ namespace MC_Service.DataLayerAccess
                 return allMotorcycles;
             }
 
-        public async Task<Motorcycle> addMotorcycleToDatabase(Motorcycle motorcycle)
-        {
-            try
+            public async Task<Motorcycle> addMotorcycleToDatabase(Motorcycle motorcycle)
             {
-                await motorcycles.InsertOneAsync(motorcycle);
-                Console.WriteLine(motorcycle);
+                try
+                {
+                    await motorcycles.InsertOneAsync(motorcycle);
+                    Console.WriteLine(motorcycle);
+                }
+                catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
+                return motorcycle;
             }
-            catch (Exception ex) {
-               Console.WriteLine(ex);
-                throw;
-            }
-            return motorcycle;
-        }
 
 
 
-        public void updateMotorcycle(string id, string propertyName,  string newPropertyValue)
-        {
-            var objectId = ObjectId.Parse(id);
-            var filter = Builders<Motorcycle>.Filter.Eq(m => m._id, objectId);
-            var update = Builders<Motorcycle>.Update.Set(propertyName, newPropertyValue);
-            motorcycles.UpdateOne(filter, update);
+            public async Task<string> updateMotorcycle(string id, string propertyName,  string newPropertyValue) /*FIXME: Correct return, and functionality. */
+            {
+                try
+                {
+                    var objectId = ObjectId.Parse(id);
+                    var filter = Builders<Motorcycle>.Filter.Eq(m => m._id, objectId);
+                    var update = Builders<Motorcycle>.Update.Set(propertyName, newPropertyValue);
+                    var res = await motorcycles.UpdateOneAsync(filter, update);
+                    return "Ok";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
         }
 
     }
